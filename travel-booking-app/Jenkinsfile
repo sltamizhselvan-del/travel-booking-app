@@ -4,7 +4,7 @@ pipeline {
 
 
     environment {
-        IMAGE_NAME = "swapnilwaghmare/travel-booking-app"
+        IMAGE_NAME = "tamizhselvansl/travel-booking-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/waghmareswapnil21/travel-booking-app.git'
+                    url: 'https://github.com/sltamizhselvan-del/travel-booking-app.git'
             }
         }
 
@@ -44,7 +44,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(
-                        credentialsId: 'docker',
+                        credentialsId: 'dockerhub',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS')]) {
 

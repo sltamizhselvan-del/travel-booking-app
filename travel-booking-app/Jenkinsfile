@@ -1,7 +1,5 @@
 pipeline {
-
     agent any
-
 
     environment {
         IMAGE_NAME = "tamizhselvansl/travel-booking-app"
@@ -20,52 +18,52 @@ pipeline {
         stage('Build') {
             steps {
                 dir('travel-booking-app') {
-            sh 'mvn clean package -DskipTests'
-        }
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('Unit Test') {
             steps {
-               dir('travel-booking-app') {
-            sh 'mvn clean package -DskipTests'
-        }
+                dir('travel-booking-app') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 dir('travel-booking-app') {
-            sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
-        }
+                    sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS')]) {
-
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
                     sh '''
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-                    docker push $IMAGE_NAME:$IMAGE_TAG
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $IMAGE_NAME:$IMAGE_TAG
                     '''
                 }
             }
-            stage('Deploy to Kubernetes') {
-    steps {
-        dir('travel-booking-app') {
-            sh '''
-            kubectl apply -f k8s/deployment.yaml
-            kubectl apply -f k8s/service.yaml
-            kubectl port-forward --address 0.0.0.0 service/travel-booking-service 8081:8081
-            '''
         }
-    }
-}
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                dir('travel-booking-app') {
+                    sh '''
+                        kubectl apply -f k8s/deployment.yaml
+                        kubectl apply -f k8s/service.yaml
+                        kubectl port-forward --address 0.0.0.0 service/travel-booking-service 8081:8081
+                    '''
+                }
+            }
         }
     }
 

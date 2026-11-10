@@ -4,6 +4,9 @@ pipeline {
     environment {
         IMAGE_NAME = "tamizhselvansl/travel-booking-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
+        PATH = "/usr/lib/jvm/java-17-openjdk-amd64/bin:${env.PATH}"
+
     }
 
     stages {

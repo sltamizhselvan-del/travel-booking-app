@@ -23,7 +23,7 @@ spec:
 
       - name: travel-booking-app
 
-        image: tamizhselvansl/travel-booking-app:3
+        image: tamizhselvansl/travel-booking-app
 
         imagePullPolicy: Always
 
